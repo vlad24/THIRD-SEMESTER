@@ -1,6 +1,6 @@
 #include "WindowsOS.h"
 
-WindowsOS::WindowsOS() :
+WindowsOS::WindowsOS()
 {
-
+    defendFromVirusProbability = 0.5;
 }

@@ -7,7 +7,8 @@ class Computer
 public:
     Computer(OperatingSystem* system);
     bool tryToInfect();
+    bool isInfected;
 private:
-    OperatingSystem OS;
+    OperatingSystem* OS;
     Randomiser randomiser;
 };

@@ -4,8 +4,10 @@
 class Graph
 {
 public:
-    Graph(FILE* file);
+    Graph();
+    void createFromFile(FILE* file);
     int** getMatrix() const;
+    int* getNeighbourNumbers(int elementNumber) const;
     int getVertexAmount() const;
 private:
     int** adjMatrix;

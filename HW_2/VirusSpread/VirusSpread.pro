@@ -7,7 +7,10 @@ SOURCES += main.cpp \
     Graph.cpp \
     LocalNet.cpp \
     Randomiser.cpp \
-    WindowsOS.cpp
+    WindowsOS.cpp \
+    MacOS.cpp \
+    LinuxOS.cpp \
+    OperatingSystem.cpp
 
 HEADERS += \
     Computer.h \
@@ -15,5 +18,7 @@ HEADERS += \
     LocalNet.h \
     Graph.h \
     Randomiser.h \
-    WindowsOS.h
+    WindowsOS.h \
+    MacOS.h \
+    LinuxOS.h
 

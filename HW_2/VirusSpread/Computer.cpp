@@ -1,13 +1,13 @@
-#pragma once
 #include "Computer.h"
 
 Computer::Computer(OperatingSystem* system)
 {
     OS = system;
+    isInfected = false;
 }
 
 bool Computer::tryToInfect()
 {
-    attackStrength = randomiser.pseudoRandomDouble(1);
-    return (atackStrength > OS.defendFromVirusProbability);
+    double attackStrength = randomiser.pseudoRandomDouble(1);
+    return (attackStrength > this->OS->defendFromVirusProbability);
 }

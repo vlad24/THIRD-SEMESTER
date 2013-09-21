@@ -8,11 +8,11 @@ class LocalNet
 public:
     LocalNet(FILE* file);
     void sendVirus();
+    void live();
     void showNetStatus();
 private:
     Graph netScheme;
-    Computer* computersList;
+    Computer** computersList;
     int computerAmount;
-    //bool* computersInfectionStatus;
     Randomiser randomiser;
 };
