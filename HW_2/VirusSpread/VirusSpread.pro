@@ -1,6 +1,7 @@
 TEMPLATE = app
 CONFIG += console
 CONFIG += qt
+CONFIG += qtestlib
 
 SOURCES += main.cpp \
     Computer.cpp \
@@ -20,5 +21,8 @@ HEADERS += \
     Randomiser.h \
     WindowsOS.h \
     MacOS.h \
-    LinuxOS.h
+    LinuxOS.h \
+    RandomiserTester.h \
+    LocalNetTester.h \
+    GraphTester.h
 

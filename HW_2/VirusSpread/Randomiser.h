@@ -6,6 +6,6 @@ class Randomiser
 {
 public:
     Randomiser();
-    int pseudoRandomInt(int maximum);
-    double pseudoRandomDouble(double maximum);
+    int pseudoRandomInt(int maximum) const;
+    double pseudoRandomDouble(double maximum) const;
 };

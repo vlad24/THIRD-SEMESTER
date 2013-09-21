@@ -2,5 +2,7 @@
 
 OperatingSystem::OperatingSystem()
 {
-
+}
+OperatingSystem::~OperatingSystem()
+{
 }

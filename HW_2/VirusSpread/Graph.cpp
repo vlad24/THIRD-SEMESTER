@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include <limits.h>
 #include <stdio.h>
 
 int const areConnected = 1;
@@ -9,7 +10,12 @@ Graph::Graph()
     adjMatrix = NULL;
 }
 
-void Graph::createFromFile(FILE *file)
+bool Graph::isEmpty() const
+{
+    return ((adjMatrix == NULL) && (vertexAmount == 0));
+}
+
+void Graph::fillFromFile(FILE *file)
 {
     // Finding out the size
     fscanf(file,"%d ",&vertexAmount);
@@ -29,7 +35,6 @@ void Graph::createFromFile(FILE *file)
             fscanf(file, "%d ", &j);
             adjMatrix[i][j] = areConnected;
             adjMatrix[j][i] = areConnected;
-
     }
 }
 
@@ -41,6 +46,10 @@ int **Graph::getMatrix() const
 int *Graph::getNeighbourNumbers(int elementNumber) const
 {
     int* neighbourNumbers = new int[vertexAmount];
+    for (int i = 0; i < vertexAmount; i++)
+    {
+        neighbourNumbers[i] = INT_MIN;
+    }
     int currentPositionInArray = 0;
     for (int i = 0; i < vertexAmount; i++)
     {
@@ -56,4 +65,13 @@ int *Graph::getNeighbourNumbers(int elementNumber) const
 int Graph::getVertexAmount() const
 {
     return vertexAmount;
+}
+
+Graph::~Graph()
+{
+    for (int i =0 ; i < vertexAmount; i++)
+    {
+        delete[] adjMatrix[i];
+    }
+    delete[] adjMatrix;
 }
