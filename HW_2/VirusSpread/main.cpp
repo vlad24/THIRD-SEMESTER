@@ -1,33 +1,34 @@
 #include "LocalNet.h"
-#include "RandomiserTester.h"
+#include "BasicRandomiserTester.h"
 #include "LocalNetTester.h"
 #include "GraphTester.h"
 #include <stdio.h>
 
-const int workingSeconds = 10000;
-const int pauseDuration = 250;
+const int workingMiliseconds = 8008;
+const int pauseDuration = 1001;
 
 int main()
 {
-    RandomiserTester randomosTester;
+    BasicRandomiserTester randomosTester;
     LocalNetTester netTester;
     GraphTester graphTester;
     QTest::qExec(&randomosTester);
     QTest::qExec(&netTester);
     QTest::qExec(&graphTester);
+    Randomiser* randomos = new BasicRandomiser();
     FILE* netFile = fopen("net.txt", "r");
-    LocalNet* net = new LocalNet(netFile);
+    LocalNet* net = new LocalNet(netFile, randomos);
     net->sendVirus();
     net->showNetInfo();
     QTime* workTime = new QTime();
     workTime->start();
     printf("%d:%d:%d \n",workTime->hour(),workTime->minute(), workTime->second());
-    while(workTime->elapsed() < workingSeconds)
+    while(workTime->elapsed() < workingMiliseconds)
     {
         net->work();
         net->makePause(pauseDuration);
         net->showNetStatus();
-        printf("(%d milliseconds elapsed)", workTime->elapsed());
+        printf("(%d seconds elapsed)", workTime->elapsed() / 1000);
     }
     delete net;
     delete workTime;

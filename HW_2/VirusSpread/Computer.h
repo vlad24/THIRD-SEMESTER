@@ -8,11 +8,10 @@ class Computer
 {
 public:
     Computer(OperatingSystem* system);
-    bool hasWeaknessesNow() const;
+    bool hasWeaknessesNow(Randomiser* randomiser) const;
     OperatingSystem* getOS() const;
     bool isInfected;
     ~Computer();
 private:
     OperatingSystem* OS;
-    Randomiser randomiser;
 };

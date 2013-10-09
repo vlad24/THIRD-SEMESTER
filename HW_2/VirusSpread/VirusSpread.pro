@@ -7,22 +7,27 @@ SOURCES += main.cpp \
     Computer.cpp \
     Graph.cpp \
     LocalNet.cpp \
-    Randomiser.cpp \
     WindowsOS.cpp \
     MacOS.cpp \
     LinuxOS.cpp \
-    OperatingSystem.cpp
+    OperatingSystem.cpp \
+    BasicRandomiser.cpp \
+    ZeroRandomiser.cpp \
+    OneRandomiser.cpp
 
 HEADERS += \
     Computer.h \
     OperatingSystem.h \
     LocalNet.h \
     Graph.h \
-    Randomiser.h \
     WindowsOS.h \
     MacOS.h \
     LinuxOS.h \
-    RandomiserTester.h \
     LocalNetTester.h \
-    GraphTester.h
+    GraphTester.h \
+    BasicRandomiser.h \
+    Randomiser.h \
+    ZeroRandomiser.h \
+    OneRandomiser.h \
+    BasicRandomiserTester.h
 

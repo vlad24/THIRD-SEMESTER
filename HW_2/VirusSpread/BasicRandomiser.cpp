@@ -1,19 +1,19 @@
-#include "Randomiser.h"
+#include "BasicRandomiser.h"
 #include "QTime"
 #include <cstdlib>
 
-Randomiser::Randomiser()
+BasicRandomiser::BasicRandomiser()
 {
 }
 
-int Randomiser::pseudoRandomInt(int maximum) const
+int BasicRandomiser::pseudoRandomInt(int maximum) const
 {
     QTime timer = timer.currentTime();
     int randomNumber = timer.msec() + rand();
     return randomNumber % maximum;
 }
 
-double Randomiser::pseudoRandomDouble(double maximum) const
+double BasicRandomiser::pseudoRandomDouble(double maximum) const
 {
     QTime timer = timer.currentTime();
     int numerator = pseudoRandomInt(10);

@@ -4,15 +4,16 @@
 #include "LinuxOS.h"
 #include "QTime"
 
-LocalNet::LocalNet(FILE* file)
+LocalNet::LocalNet(FILE* file, Randomiser *randomForNet)
 {
     netScheme.fillFromFile(file);
     computerAmount = netScheme.getVertexAmount();
     computersList = new Computer*[computerAmount];
     toBeIgnoredAtThisStep = new bool[computerAmount];
+    randomiser = randomForNet;
     for (int i = 0; i < computerAmount; i++)
     {
-        int OSindex = randomiser.pseudoRandomInt(3);
+        int OSindex = randomiser->pseudoRandomInt(3);
         switch(OSindex)
         {
         case(0):
@@ -39,7 +40,7 @@ LocalNet::LocalNet(FILE* file)
 
 void LocalNet::sendVirus()
 {
-    int firstVictimNumber = randomiser.pseudoRandomInt(computerAmount);
+    int firstVictimNumber = randomiser->pseudoRandomInt(computerAmount);
     computersList[firstVictimNumber]->isInfected = true;
 }
 
@@ -57,9 +58,9 @@ void LocalNet::work()
             for (int j = 0; j < computerAmount; j++)
             {
                 int connectedComputer = neighbours[j];
-                if (connectedComputer > 0)
+                if (connectedComputer > INT_MIN)
                 {
-                    if (computersList[connectedComputer]->hasWeaknessesNow())
+                    if (computersList[connectedComputer]->hasWeaknessesNow(this->randomiser))
                     {
                         computersList[connectedComputer]->isInfected = true;
                         toBeIgnoredAtThisStep[connectedComputer] = true;
@@ -117,4 +118,5 @@ LocalNet::~LocalNet()
     }
     delete[] computersList;
     delete[] toBeIgnoredAtThisStep;
+    delete randomiser;
 }

@@ -6,9 +6,9 @@ Computer::Computer(OperatingSystem* system)
     isInfected = false;
 }
 
-bool Computer::hasWeaknessesNow() const
+bool Computer::hasWeaknessesNow(Randomiser* randomiser) const
 {
-    double attackStrength = randomiser.pseudoRandomDouble(1);
+    double attackStrength = randomiser->pseudoRandomDouble(1);
     return (attackStrength > OS->defendFromVirusProbability);
 }
 

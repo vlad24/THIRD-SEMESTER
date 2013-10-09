@@ -9,7 +9,10 @@ class LocalNet
 {
     friend class LocalNetTester;
 public:
-    LocalNet(FILE* file);
+    /*! @param file Place where we will take the scheme of the net
+        @param random Object which defines how random numbers for the net work will be generated
+      */
+    LocalNet(FILE* file, Randomiser* randomForNet);
     //! A function that brings a virus to random computer of the net
     void sendVirus();
     //! A function that immitates computers infecting each other during working
@@ -22,10 +25,10 @@ public:
     ~LocalNet();
 private:
     Graph netScheme;
-    //! An array that enables to work comfortablt with comuters of the net
+    //! An array that enables to work comfortably with computers of the net
     Computer** computersList;
     int computerAmount;
     //! Array to observe computers that have been infected during one session and can't infect others
     bool* toBeIgnoredAtThisStep;
-    Randomiser randomiser;
+    Randomiser* randomiser;
 };
