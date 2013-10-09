@@ -33,40 +33,45 @@ private slots:
         FILE* positionsFile = fopen("_robotsConfiguration.txt", "r");
         destroyer->fillStartPositions(positionsFile);
         QVERIFY(destroyer->robotsAmount == 3);
-        QVERIFY(destroyer->startPositions[0] == 0);
-        QVERIFY(destroyer->startPositions[2] == 4);
+        QVERIFY(destroyer->robotFromThisVertex[0] == 0);
+        QVERIFY(destroyer->robotFromThisVertex[4] == 2);
         fclose(positionsFile);
         delete destroyer;
     }
 
-    void testMarkingVerteces_1stVertex()
+    void testCreatingPathField()
     {
         RobotDestroyer* destroyer = new RobotDestroyer();
         FILE* fieldFile = fopen("_fieldFile.txt", "r");
         destroyer->createField(fieldFile);
         FILE* positionsFile = fopen("_robotsConfiguration.txt", "r");
         destroyer->fillStartPositions(positionsFile);
-        destroyer->markVertecesByRobots();
-        printf("Printing:");
-        destroyer->robotsAtTheVertex[1]->print();
-        destroyer->robotsAtTheVertex[2]->print();
-        destroyer->robotsAtTheVertex[3]->print();
-//        QVERIFY(destroyer->robotsAtTheVertex[2]->contains(0));
-//        QVERIFY(destroyer->robotsAtTheVertex[2]->contains(1));
-//        QVERIFY(destroyer->robotsAtTheVertex[2]->contains(2));
+        destroyer->createPathField();
+        QVERIFY(destroyer->pathField->getMatrix()[0][1] == 1);
+        QVERIFY(destroyer->pathField->getMatrix()[1][0] == 1);
+        QVERIFY(destroyer->pathField->getMatrix()[5][3] == 1);
+        QVERIFY(destroyer->pathField->getMatrix()[3][5] == 1);
+        QVERIFY(destroyer->pathField->getMatrix()[5][4] == 0);
+        QVERIFY(destroyer->pathField->getMatrix()[4][5] == 0);
+        QVERIFY(destroyer->pathField->getMatrix()[0][2] == 0);
+        QVERIFY(destroyer->pathField->getMatrix()[2][0] == 0);
         fclose(positionsFile);
         delete destroyer;
     }
 
-    void testMarkingVerteces_2ndVertex()
+    void testMarkingComponents()
     {
+        RobotDestroyer* destroyer = new RobotDestroyer();
+        FILE* fieldFile = fopen("_fieldFile.txt", "r");
+        destroyer->createField(fieldFile);
+        FILE* positionsFile = fopen("_robotsConfiguration.txt", "r");
+        destroyer->fillStartPositions(positionsFile);
+        destroyer->createPathField();
+        bool* passedNow = new bool[destroyer->robotsAmount];
+        destroyer->markComponent(0, passedNow);
 
+        fclose(positionsFile);
+        delete destroyer;
     }
-
-    void testMarkingVerteces_3rdVertex()
-    {
-
-    }
-    
 };
 

@@ -10,6 +10,23 @@ Graph::Graph()
     adjMatrix = NULL;
 }
 
+Graph::Graph(int futureVertexAmount)
+{
+    vertexAmount = futureVertexAmount;
+    adjMatrix = new int*[futureVertexAmount];
+    for (int i = 0; i < futureVertexAmount; i++)
+    {
+        adjMatrix[i] = new int[futureVertexAmount];
+    }
+    for (int i = 0; i < futureVertexAmount; i++)
+    {
+        for(int j = 0; j < futureVertexAmount; j++)
+        {
+            adjMatrix[i][j] = 0;
+        }
+    }
+}
+
 bool Graph::isEmpty() const
 {
     return ((adjMatrix == NULL) && (vertexAmount == 0));
@@ -98,6 +115,15 @@ int *Graph::getDoubleNeighbourNumbers(int elementNumber, int& count) const
 int Graph::getVertexAmount() const
 {
     return vertexAmount;
+}
+
+void Graph::connectVerteces(int first, int second)
+{
+    if ((first < vertexAmount) && (second < vertexAmount))
+    {
+        adjMatrix[first][second] = 1;
+        adjMatrix[second][first] = 1;
+    }
 }
 
 Graph::~Graph()

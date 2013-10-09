@@ -5,8 +5,8 @@
 RobotDestroyer::RobotDestroyer()
 {
     field = NULL;
-    startPositions = NULL;
-    robotsAtTheVertex = NULL;
+    pathField = NULL;
+    robotFromThisVertex = NULL;
     robotsAmount = 0;
 }
 
@@ -19,10 +19,10 @@ void RobotDestroyer::createField(FILE* fieldFile)
 void RobotDestroyer::fillStartPositions(FILE* positionsFile)
 {
     fscanf(positionsFile, "%d", &robotsAmount);
-    startPositions = new int[robotsAmount];
+    robotFromThisVertex = new int[robotsAmount];
     for (int i = 0; i < robotsAmount; i++)
     {
-        startPositions[i] = INT_MIN;
+        robotFromThisVertex[i] = INT_MIN;
     }
     for (int i = 0; i < robotsAmount; i++)
     {
@@ -30,66 +30,97 @@ void RobotDestroyer::fillStartPositions(FILE* positionsFile)
         int vertex = -1;
         fscanf(positionsFile, "%d ", &robot);
         fscanf(positionsFile, "%d", &vertex);
-        startPositions[robot] = vertex;
+        robotFromThisVertex[vertex] = robot;
     }
 }
 
-
-
-void RobotDestroyer::markVertecesByRobots()
+void RobotDestroyer::createPathField()
 {
-      robotsAtTheVertex = new PointerList*[field->getVertexAmount()];
-      for (int i = 0; i < field->getVertexAmount(); i++)
-      {
-          robotsAtTheVertex[i] = new PointerList();
-      }
-    for (int robotNumber = 0; robotNumber < robotsAmount; robotNumber++)
+    Graph* pathGraph = new Graph(field->getVertexAmount());
+    for (int currentVertex = 0; currentVertex < field->getVertexAmount(); currentVertex++)
     {
-        // Analysing all possible ways for the current robot
-        int startRobotPosition = startPositions[robotNumber];
-        markVertexByOneRobot(robotNumber, startRobotPosition, 0);
-        printf("%d robot done\n", robotNumber);
+        int count = 0;
+        int* doubleNeighbours = field->getDoubleNeighbourNumbers(currentVertex, count);
+        for (int i = 0; i < count; i++)
+        {
+            pathGraph->connectVerteces(currentVertex, doubleNeighbours[i]);
+        }
+        delete[] doubleNeighbours;
     }
+    pathField = pathGraph;
+}
+
+bool RobotDestroyer::robotsCanDestroy()
+{
+    int vertexCount = pathField->getVertexAmount();
+    bool* passed = new bool[vertexCount];
+    for (int i = 0; i < vertexCount; i++)
+    {
+        passed[i] = false;
+    }
+    for (int currentVertex = 0; currentVertex < vertexCount; currentVertex++)
+    {
+        if (!passed[currentVertex])
+        {
+            bool* passedAtThisStep = new bool[vertexCount];
+            markComponent(currentVertex, passedAtThisStep);
+            int robotsInTheComponent = countRobotsInComponent(passedAtThisStep);
+            if (robotsInTheComponent == 1)
+            {
+                delete[] passed;
+                delete[] passedAtThisStep;
+                return false;
+            }
+            else
+            {
+                for (int y = 0 ; y < vertexCount; y++)
+                    if (passedAtThisStep[y])
+                        passed[y] = true;
+                delete[] passedAtThisStep;
+            }
+        }
+    }
+    delete[] passed;
+    return true;
+}
+
+void RobotDestroyer::markComponent(int currentVertex, bool* &passedNow)
+{
+    passedNow[currentVertex] = true;
+    int neighbourCount = 0;
+    int* neighbours = pathField->getNeighbourNumbers(currentVertex, neighbourCount);
+    for (int neighbourIndex = 0; neighbourIndex < neighbourCount; neighbourIndex++)
+    {
+        if (!passedNow[neighbourIndex])
+        {
+            passedNow[neighbourIndex] = true;
+            markComponent(neighbours[neighbourIndex], passedNow);
+        }
+    }
+    delete[] neighbours;
+    return;
+}
+
+int RobotDestroyer::countRobotsInComponent(bool* isInComponent)
+{
+    int robotsCounter = 0;
+    for (int i = 0; i < pathField->getVertexAmount(); i++)
+    {
+        if (isInComponent[i])
+        {
+            if (robotFromThisVertex[i] != INT_MIN)
+                robotsCounter++;
+        }
+    }
+    return robotsCounter;
 }
 
 RobotDestroyer::~RobotDestroyer()
 {
     if (field != NULL)
-    {
-        int vertecesCount = field->getVertexAmount();
         delete field;
-        if (robotsAtTheVertex != NULL)
-        {
-            for (int i = 0; i < vertecesCount; i++)
-            {
-                delete robotsAtTheVertex[i];
-            }
-            delete[] robotsAtTheVertex;
-        }
-    }
-}
-
-//!!!! NEEDS REPAIRING USING DOUBLE NEIGHBOURS
-void RobotDestroyer::markVertexByOneRobot(int robot, int robotPosition, int step)
-{
-    if (robotsAtTheVertex[robotPosition]->contains(robot))
-    {
-        // If a robot has been here - escaping
-        return;
-    }
-    else
-    {
-        // If it hasn't - appending it to the list of the vertex if step is even
-        if (step % 2 == 0)
-            robotsAtTheVertex[robotPosition]->add(robot);
-        // Scanning verteces, incident to its current position
-        int count = 0;
-        int* neighbourVerteces = field->getNeighbourNumbers(robotPosition, count);
-        for (int j = 0; j < count; j++)
-        {
-            // Transporting robot to a new vertex and doing the same there
-                markVertexByOneRobot(robot, neighbourVerteces[j], step + 1);
-        }
-        delete neighbourVerteces;
-    }
+    if (pathField != NULL)
+        delete pathField;
+    if (robotFromThisVertex != NULL)
+        delete[] robotFromThisVertex;
 }

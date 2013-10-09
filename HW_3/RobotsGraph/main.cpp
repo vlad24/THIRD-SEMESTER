@@ -12,7 +12,6 @@ int main()
     destroyer->createField(fieldFile);
     FILE* positionsFile = fopen("_robotsConfiguration.txt", "r");
     destroyer->fillStartPositions(positionsFile);
-    destroyer->markVertecesByRobots();
     fclose(positionsFile);
     delete destroyer;
 

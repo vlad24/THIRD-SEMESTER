@@ -9,13 +9,14 @@ public:
     RobotDestroyer();
     void createField(FILE *fieldFile);
     void fillStartPositions(FILE* positionsFile);
-    void markVertecesByRobots();
+    bool robotsCanDestroy();
     ~RobotDestroyer();
 private:
     Graph* field;
+    int* robotFromThisVertex;
+    Graph* pathField;
     int robotsAmount;
-    PointerList** robotsAtTheVertex;
-    void markVertexByOneRobot(int robot, int robotPosition, int step);
-    int* startPositions;
-    int* alive;
+    void createPathField();
+    void markComponent(int currentVertex, bool *&passedNow);
+    int countRobotsInComponent(bool* isInComponent);
 };

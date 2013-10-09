@@ -6,6 +6,7 @@ class Graph
 public:
     friend class GraphTester;
     Graph();
+    Graph(int futureVertexAmount);
     bool isEmpty() const;
     void fillFromFile(FILE* file);
     int** getMatrix() const;
@@ -13,6 +14,7 @@ public:
     int* getNeighbourNumbers(int elementNumber, int& count) const;
     int* getDoubleNeighbourNumbers(int elementNumber, int &count) const;
     int getVertexAmount() const;
+    void connectVerteces(int first, int second);
     ~Graph();
 private:
     int** adjMatrix;
