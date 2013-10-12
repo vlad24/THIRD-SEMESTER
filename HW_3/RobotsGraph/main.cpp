@@ -1,25 +1,28 @@
-#include <stdio.h>
 #include "RobotDestroyerTester.h"
-#include "PointerListTester.h"
 #include "GraphTester.h"
 
 int main()
 {
-    int o = 0;
-    scanf("%d", &o);
-    RobotDestroyer* destroyer = new RobotDestroyer();
-    FILE* fieldFile = fopen("_fieldFile.txt", "r");
-    destroyer->createField(fieldFile);
-    FILE* positionsFile = fopen("_robotsConfiguration.txt", "r");
-    destroyer->fillStartPositions(positionsFile);
-    fclose(positionsFile);
-    delete destroyer;
-
-    PointerListTester lTester;
-    QTest::qExec(&lTester);
-    RobotDestroyerTester dTester;
-    QTest::qExec(&dTester);
     GraphTester gTester;
     QTest::qExec(&gTester);
-}
+    RobotDestroyerTester dTester;
+    QTest::qExec(&dTester);
 
+    printf("#Field and robots start positions are going to be read from files\n");
+    FILE* fieldFile = fopen("_fieldFile.txt", "r");
+    FILE* robotsFile = fopen("_robotsConfiguration.txt", "r");
+
+    RobotDestroyer* destroyer = new RobotDestroyer();
+    destroyer->createField(fieldFile);
+    destroyer->fillStartPositions(robotsFile);
+    printf("#Field's been created, robots are put at their start positions.\n");
+
+    if (destroyer->robotsCanDestroy())
+        printf("Robots CAN destroy\n");
+    else
+        printf("Robots CANNOT destroy\n");
+
+    delete destroyer;
+    fclose(fieldFile);
+    fclose(robotsFile);
+}

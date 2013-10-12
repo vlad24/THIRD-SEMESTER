@@ -18,12 +18,13 @@ void RobotDestroyer::createField(FILE* fieldFile)
 
 void RobotDestroyer::fillStartPositions(FILE* positionsFile)
 {
-    fscanf(positionsFile, "%d", &robotsAmount);
-    robotFromThisVertex = new int[robotsAmount];
-    for (int i = 0; i < robotsAmount; i++)
+    int vertecesAmount = field->getVertexAmount();
+    robotFromThisVertex = new int[vertecesAmount];
+    for (int i = 0; i < vertecesAmount; i++)
     {
         robotFromThisVertex[i] = INT_MIN;
     }
+    fscanf(positionsFile, "%d", &robotsAmount);
     for (int i = 0; i < robotsAmount; i++)
     {
         int robot = -1;
@@ -36,22 +37,22 @@ void RobotDestroyer::fillStartPositions(FILE* positionsFile)
 
 void RobotDestroyer::createPathField()
 {
-    Graph* pathGraph = new Graph(field->getVertexAmount());
+    pathField = new Graph(field->getVertexAmount());
     for (int currentVertex = 0; currentVertex < field->getVertexAmount(); currentVertex++)
     {
         int count = 0;
         int* doubleNeighbours = field->getDoubleNeighbourNumbers(currentVertex, count);
         for (int i = 0; i < count; i++)
         {
-            pathGraph->connectVerteces(currentVertex, doubleNeighbours[i]);
+            pathField->connectVerteces(currentVertex, doubleNeighbours[i]);
         }
         delete[] doubleNeighbours;
     }
-    pathField = pathGraph;
 }
 
 bool RobotDestroyer::robotsCanDestroy()
 {
+    createPathField();
     int vertexCount = pathField->getVertexAmount();
     bool* passed = new bool[vertexCount];
     for (int i = 0; i < vertexCount; i++)
@@ -91,11 +92,8 @@ void RobotDestroyer::markComponent(int currentVertex, bool* &passedNow)
     int* neighbours = pathField->getNeighbourNumbers(currentVertex, neighbourCount);
     for (int neighbourIndex = 0; neighbourIndex < neighbourCount; neighbourIndex++)
     {
-        if (!passedNow[neighbourIndex])
-        {
-            passedNow[neighbourIndex] = true;
+        if (!passedNow[neighbours[neighbourIndex]])
             markComponent(neighbours[neighbourIndex], passedNow);
-        }
     }
     delete[] neighbours;
     return;
@@ -117,10 +115,10 @@ int RobotDestroyer::countRobotsInComponent(bool* isInComponent)
 
 RobotDestroyer::~RobotDestroyer()
 {
+    if (robotFromThisVertex != NULL)
+        delete[] robotFromThisVertex;
     if (field != NULL)
         delete field;
     if (pathField != NULL)
         delete pathField;
-    if (robotFromThisVertex != NULL)
-        delete[] robotFromThisVertex;
 }

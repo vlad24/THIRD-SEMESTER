@@ -19,6 +19,13 @@ private slots:
         delete graph;
     }
 
+    void testCreationWithFixedSize()
+    {
+        Graph* graph = new Graph(3);
+        QVERIFY(graph->getMatrix()[1][2] == 0);
+        delete graph;
+    }
+
     void testFillingFromFile()
     {
         Graph* graph = new Graph();
@@ -42,6 +49,7 @@ private slots:
         QVERIFY(neighboursOfTheFirst[0] == 3);
         QVERIFY(neighboursOfTheFirst[1] == 5);
         delete graph;
+        delete neighboursOfTheFirst;
         fclose(file);
     }
 
@@ -56,13 +64,11 @@ private slots:
         for (int i = 0; i < counter; i++)
         {
             controlSum += doubleNeighboursOfTheFirst[i];
-            printf("%d ", doubleNeighboursOfTheFirst[i]);
         }
         QVERIFY(counter == 3);
         QVERIFY(controlSum == 6);
         delete graph;
+        delete doubleNeighboursOfTheFirst;
         fclose(file);
     }
-
-    
 };

@@ -105,7 +105,7 @@ int *Graph::getDoubleNeighbourNumbers(int elementNumber, int& count) const
                     accounted[secondaryNeighbours[j]] = true;
                 }
         }
-        delete secondaryNeighbours;
+        delete[] secondaryNeighbours;
     }
     delete[] accounted;
     delete[] neighbours;
